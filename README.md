@@ -180,12 +180,6 @@ The application includes a comprehensive user management system accessible only 
 - **Manager**: Enhanced permissions for production order management
 - **User**: Standard access to view and manage production orders
 
-### Admin Features
-    -View All Users (`/users`)
-    -Create New User (`/users/new`)
-    -Edit User (`/users/:id/edit`)
-    -Delete User
-
 ### API Endpoints
 All user management endpoints require admin authentication:
 - `GET /api/users` - List all users
