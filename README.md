@@ -114,7 +114,7 @@ po-frontend/
    ```
 
 5. **Open your browser:**
-   Navigate to `http://localhost:8080`
+   Navigate to `http://localhost:8080` OR `http://localhost:8081`
 
 ### Available Scripts
 
