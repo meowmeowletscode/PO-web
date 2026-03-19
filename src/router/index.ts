@@ -1,6 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: string
+    requiresAuth?: boolean
+    requiresAdmin?: boolean
+    hideForAuth?: boolean
+  }
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -43,6 +52,36 @@ const router = createRouter({
       }
     },
     {
+      path: '/users',
+      name: 'users',
+      component: () => import('@/views/Users.vue'),
+      meta: {
+        title: 'User Management',
+        requiresAuth: true,
+        requiresAdmin: true
+      }
+    },
+    {
+      path: '/users/new',
+      name: 'create-user',
+      component: () => import('@/views/CreateUser.vue'),
+      meta: {
+        title: 'Create User',
+        requiresAuth: true,
+        requiresAdmin: true
+      }
+    },
+    {
+      path: '/users/:id/edit',
+      name: 'edit-user',
+      component: () => import('@/views/EditUser.vue'),
+      meta: {
+        title: 'Edit User',
+        requiresAuth: true,
+        requiresAdmin: true
+      }
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/views/NotFound.vue'),
@@ -80,6 +119,12 @@ router.beforeEach(async (to, from, next) => {
       name: 'login',
       query: { redirect: to.fullPath }
     })
+    return
+  }
+  
+  // Check if route requires admin role
+  if (to.meta.requiresAdmin && authStore.user?.role !== 'admin') {
+    next({ name: 'dashboard' })
     return
   }
   

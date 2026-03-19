@@ -18,6 +18,15 @@
             Dashboard
           </router-link>
           
+          <router-link 
+            v-if="authStore.isAuthenticated && authStore.user?.role === 'admin'"
+            to="/users" 
+            class="nav-link"
+            :class="{ active: $route.name === 'users' || $route.name === 'create-user' || $route.name === 'edit-user' }"
+          >
+            Users
+          </router-link>
+          
           <div class="nav-actions">
             <template v-if="authStore.isAuthenticated">
               <span class="user-info" aria-label="Current user">

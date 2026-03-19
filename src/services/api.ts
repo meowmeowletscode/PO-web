@@ -9,7 +9,11 @@ import type {
   ApiError,
   AuthResponse,
   LoginRequest,
-  RegisterRequest
+  RegisterRequest,
+  User,
+  UserListResponse,
+  CreateUserRequest,
+  UpdateUserRequest
 } from '@/types'
 
 class ApiService {
@@ -156,6 +160,32 @@ class ApiService {
 
   logout(): void {
     this.clearAuthToken()
+  }
+
+  // User Management API (Admin)
+  async getUsers(): Promise<UserListResponse> {
+    const response = await this.api.get('/api/users')
+    return response.data
+  }
+
+  async getUser(id: number): Promise<ApiResponse<User>> {
+    const response = await this.api.get(`/api/users/${id}`)
+    return response.data
+  }
+
+  async createUser(userData: CreateUserRequest): Promise<ApiResponse<User>> {
+    const response = await this.api.post('/api/users', userData)
+    return response.data
+  }
+
+  async updateUser(id: number, updates: UpdateUserRequest): Promise<ApiResponse<User>> {
+    const response = await this.api.patch(`/api/users/${id}`, updates)
+    return response.data
+  }
+
+  async deleteUser(id: number): Promise<ApiResponse> {
+    const response = await this.api.delete(`/api/users/${id}`)
+    return response.data
   }
 
   // Utility methods

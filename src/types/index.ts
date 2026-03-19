@@ -106,6 +106,27 @@ export interface RegisterRequest {
   role?: string
 }
 
+export interface UserListResponse {
+  success: boolean
+  data: User[]
+  count: number
+  timestamp: string
+}
+
+export interface CreateUserRequest {
+  username: string
+  email: string
+  password: string
+  role: string
+}
+
+export interface UpdateUserRequest {
+  username?: string
+  email?: string
+  role?: string
+  password?: string
+}
+
 // UI State Types
 export interface LoadingState {
   orders: boolean
