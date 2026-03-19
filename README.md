@@ -181,39 +181,10 @@ The application includes a comprehensive user management system accessible only 
 - **User**: Standard access to view and manage production orders
 
 ### Admin Features
-
-#### View All Users (`/users`)
-- Sortable table displaying all users with ID, username, email, role, and creation date
-- Filter users by role (admin/manager/user)
-- Search across usernames, emails, and user IDs
-- Pagination support (10 users per page)
-- Real-time refresh capability
-
-#### Create New User (`/users/new`)
-- Admin-only user registration interface
-- Required fields: username, email, password, role
-- Client-side validation with real-time feedback
-- Password strength requirements enforced
-- Automatic redirect to users list on success
-
-#### Edit User (`/users/:id/edit`)
-- Update user information (username, email, role)
-- Optional password reset functionality
-- Shows user metadata (ID, creation date)
-- Change detection - only saves if modifications made
-- Validation ensures data integrity
-
-#### Delete User
-- Confirmation modal before deletion
-- Self-delete protection (admins cannot delete themselves)
-- Permanent deletion with no recovery
-- Immediate UI update on success
-
-### Access Control
-- User management routes protected by `requiresAdmin` guard
-- Navigation menu shows "Users" link only for admin users
-- API endpoints require admin role authentication
-- Unauthorized access attempts redirect to dashboard
+    -View All Users (`/users`)
+    -Create New User (`/users/new`)
+    -Edit User (`/users/:id/edit`)
+    -Delete User
 
 ### API Endpoints
 All user management endpoints require admin authentication:
