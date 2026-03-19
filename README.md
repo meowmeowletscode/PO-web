@@ -10,15 +10,17 @@ A modern, responsive Vue.js application for managing production orders with AI-p
 - **🔄 Status Tracking**: Track orders through Pending → In Progress → Completed workflow
 - **⚡ Priority Scoring**: AI-driven priority calculation based on quantity and due dates
 - **🔍 Advanced Filtering**: Filter by status, search by product name or ID
+- **👥 User Management**: Admin interface to view, create, edit, and delete users
 - **📱 Responsive Design**: Optimized for desktop, tablet, and mobile devices
 
 ### Technical Features
 - **🎨 Modern UI/UX**: Clean, intuitive interface with accessibility best practices
 - **⚡ Performance Optimized**: Lazy loading, efficient state management, and optimized builds
-- **🔐 Authentication Ready**: JWT-based authentication system (optional)
+- **🔐 Authentication & Authorization**: JWT-based auth with role-based access control (RBAC)
 - **🧪 Well Tested**: Comprehensive test suite with Vue Test Utils and Vitest
 - **♿ Accessibility First**: WCAG compliant with ARIA labels and keyboard navigation
 - **🌐 API Integration**: RESTful API communication with error handling
+- **👮 Admin Panel**: Complete user management system for administrators
 
 ## 🏗️ Architecture Overview
 
@@ -48,12 +50,16 @@ po-frontend/
 │   │   ├── StatusBadge.vue # Status indicator
 │   │   ├── PriorityBadge.vue # Priority indicator
 │   │   ├── StatusButton.vue  # Status update button
-│   │   └── StatsDashboard.vue # Statistics overview
+│   │   ├── StatsDashboard.vue # Statistics overview
+│   │   └── UserList.vue    # User management table
 │   ├── views/              # Page components
 │   │   ├── Dashboard.vue   # Main dashboard page
 │   │   ├── Login.vue       # Authentication page
 │   │   ├── Register.vue    # User registration
 │   │   ├── Profile.vue     # User profile
+│   │   ├── Users.vue       # User management (admin)
+│   │   ├── CreateUser.vue  # Create new user (admin)
+│   │   ├── EditUser.vue    # Edit user (admin)
 │   │   └── NotFound.vue    # 404 error page
 │   ├── stores/             # Pinia stores
 │   │   ├── __tests__/      # Store tests
@@ -151,10 +157,71 @@ The main dashboard provides:
 - **Filter & Search**: Use status dropdown and search box
 - **Priority Insights**: AI-calculated priority scores with color coding
 
-### Authentication (Optional)
-- **Sign In**: Use demo credentials (username: `demo`, password: `demo123`)
+### Authentication
+- **Sign In**: Use demo credentials (username: `admin`, password: `Admin123`)
 - **Register**: Create new account with role selection
 - **Profile**: View account details and manage settings
+
+### User Management (Admin Only)
+- **View Users**: Sortable table with all system users
+- **Filter & Search**: Filter by role (admin/manager/user), search by username, email, or ID
+- **Create Users**: Admin interface to register new users with specific roles
+- **Edit Users**: Update username, email, role, or reset passwords
+- **Delete Users**: Remove users from the system (with self-delete protection)
+- **Role-Based Access**: Only administrators can access user management features
+
+## 👥 User Management System
+
+### Overview
+The application includes a comprehensive user management system accessible only to administrators. This allows admins to manage all system users, assign roles, and control access.
+
+### Available Roles
+- **Admin**: Full system access including user management
+- **Manager**: Enhanced permissions for production order management
+- **User**: Standard access to view and manage production orders
+
+### Admin Features
+
+#### View All Users (`/users`)
+- Sortable table displaying all users with ID, username, email, role, and creation date
+- Filter users by role (admin/manager/user)
+- Search across usernames, emails, and user IDs
+- Pagination support (10 users per page)
+- Real-time refresh capability
+
+#### Create New User (`/users/new`)
+- Admin-only user registration interface
+- Required fields: username, email, password, role
+- Client-side validation with real-time feedback
+- Password strength requirements enforced
+- Automatic redirect to users list on success
+
+#### Edit User (`/users/:id/edit`)
+- Update user information (username, email, role)
+- Optional password reset functionality
+- Shows user metadata (ID, creation date)
+- Change detection - only saves if modifications made
+- Validation ensures data integrity
+
+#### Delete User
+- Confirmation modal before deletion
+- Self-delete protection (admins cannot delete themselves)
+- Permanent deletion with no recovery
+- Immediate UI update on success
+
+### Access Control
+- User management routes protected by `requiresAdmin` guard
+- Navigation menu shows "Users" link only for admin users
+- API endpoints require admin role authentication
+- Unauthorized access attempts redirect to dashboard
+
+### API Endpoints
+All user management endpoints require admin authentication:
+- `GET /api/users` - List all users
+- `GET /api/users/:id` - Get specific user details
+- `POST /api/users` - Create new user
+- `PATCH /api/users/:id` - Update user information
+- `DELETE /api/users/:id` - Delete user
 
 ## 🔧 Technical Choices & Rationale
 
@@ -183,58 +250,6 @@ The main dashboard provides:
 - **Integration**: Built for Vite projects
 - **Coverage**: Comprehensive testing utilities
 
-## ♿ Accessibility Features
-
-### WCAG 2.1 AA Compliance
-- **Keyboard Navigation**: Full keyboard accessibility
-- **Screen Reader Support**: Comprehensive ARIA labels and landmarks
-- **Focus Management**: Visible focus indicators and logical tab order
-- **Color Contrast**: High contrast ratios for all text
-- **Responsive Text**: Scalable fonts and layouts
-
-### Accessibility Features
-- **Semantic HTML**: Proper heading hierarchy and landmarks
-- **ARIA Labels**: Descriptive labels for interactive elements
-- **Live Regions**: Dynamic content announcements
-- **Error Handling**: Clear error messages and validation
-- **Alternative Text**: Meaningful descriptions for visual elements
-
-## 🧪 Testing Strategy
-
-### Test Coverage
-- **Unit Tests**: Component logic and utility functions
-- **Integration Tests**: Store interactions and API calls
-- **Accessibility Tests**: ARIA attributes and keyboard navigation
-- **Error Handling**: Network failures and validation errors
-
-### Testing Approach
-```typescript
-// Component Testing
-describe('OrderList', () => {
-  it('renders orders correctly', () => {
-    // Test component rendering
-  })
-  
-  it('handles user interactions', () => {
-    // Test user events
-  })
-  
-  it('has proper accessibility', () => {
-    // Test ARIA attributes
-  })
-})
-
-// Store Testing
-describe('Orders Store', () => {
-  it('manages state correctly', () => {
-    // Test state mutations
-  })
-  
-  it('handles API errors', () => {
-    // Test error scenarios
-  })
-})
-```
 
 ### Running Tests
 ```bash
@@ -243,130 +258,4 @@ npm run test:ui           # Visual test runner
 npm run test:coverage     # Generate coverage report
 ```
 
-## 🚀 Scalability Considerations
-
-### Current Architecture Benefits
-1. **Component-Based**: Reusable, maintainable components
-2. **Type Safety**: TypeScript prevents runtime errors
-3. **State Management**: Centralized, predictable state updates
-4. **API Abstraction**: Clean separation between UI and backend
-5. **Testing**: Comprehensive test coverage for reliability
-
-### Scaling to Production
-
-#### Performance Optimizations
-- **Code Splitting**: Route-based lazy loading implemented
-- **Bundle Analysis**: Vite bundle analyzer for optimization
-- **Caching**: HTTP caching headers and service worker ready
-- **Image Optimization**: Responsive images and lazy loading
-
-#### Microservices Architecture
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Frontend      │    │  API Gateway    │    │  Order Service  │
-│   (Vue.js)      │◄──►│   (Express)     │◄──►│   (Node.js)     │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-                                │
-                                ▼
-                       ┌─────────────────┐    ┌─────────────────┐
-                       │  Auth Service   │    │   AI Service    │
-                       │   (Node.js)     │    │   (Python)      │
-                       └─────────────────┘    └─────────────────┘
-```
-
-#### Infrastructure Scaling
-- **CDN**: Static asset distribution
-- **Load Balancing**: Multiple frontend instances
-- **Caching**: Redis for session and data caching
-- **Monitoring**: Error tracking and performance monitoring
-
-### Potential Improvements
-
-#### Short Term (1-3 months)
-- **PWA Features**: Offline support and push notifications
-- **Advanced Filtering**: Date ranges, priority levels, custom fields
-- **Bulk Operations**: Multi-select and batch updates
-- **Export Features**: CSV/PDF export functionality
-
-#### Medium Term (3-6 months)
-- **Real-time Updates**: WebSocket integration for live data
-- **Advanced Analytics**: Charts, trends, and forecasting
-- **Mobile App**: React Native or Ionic companion app
-- **Integration APIs**: Third-party system connections
-
-#### Long Term (6+ months)
-- **AI Enhancement**: Machine learning for better predictions
-- **Workflow Engine**: Custom approval and routing workflows
-- **Multi-tenancy**: Support for multiple organizations
-- **Advanced Security**: Role-based permissions and audit logs
-
-## 🔐 Security Considerations
-
-### Current Security Measures
-- **JWT Authentication**: Secure token-based authentication
-- **Input Validation**: Client and server-side validation
-- **XSS Protection**: Sanitized user inputs
-- **HTTPS Ready**: Secure communication protocols
-
-### Production Security Checklist
-- [ ] Environment variable security
-- [ ] Content Security Policy (CSP)
-- [ ] Rate limiting implementation
-- [ ] CORS configuration
-- [ ] Security headers (HSTS, X-Frame-Options)
-- [ ] Dependency vulnerability scanning
-
-## 🌟 SuDu AI Integration
-
-### Automation Philosophy
-This production order dashboard aligns with **SuDu AI's mission of automating 80% of routine operations** by:
-
-#### Intelligent Automation
-- **Smart Prioritization**: AI calculates priority scores based on quantity and due dates
-- **Proactive Alerts**: System identifies overdue and critical orders automatically
-- **Workflow Optimization**: Streamlined status transitions reduce manual overhead
-
-#### Non-Technical User Focus
-- **Intuitive Interface**: Clean, simple design requires minimal training
-- **Visual Indicators**: Color-coded priorities and status badges for quick recognition
-- **Guided Actions**: Clear next steps and recommendations reduce decision fatigue
-
-#### Operational Efficiency
-- **Real-time Insights**: Live dashboard eliminates need for manual reporting
-- **Batch Recommendations**: AI suggests grouping similar orders for efficiency
-- **Error Prevention**: Validation and warnings prevent common mistakes
-
-### Business Impact
-By implementing this system, organizations can expect:
-- **80% reduction** in manual order tracking tasks
-- **Faster decision-making** through AI-powered insights
-- **Improved accuracy** via automated validation and alerts
-- **Enhanced visibility** across all production operations
-
-## 📞 Support & Contributing
-
-### Getting Help
-- **Documentation**: This README and inline code comments
-- **Issues**: GitHub issues for bug reports and feature requests
-- **API Documentation**: Backend API documentation at `/api/docs`
-
-### Development Guidelines
-- **Code Style**: ESLint and Prettier configurations enforced
-- **Testing**: All new features require corresponding tests
-- **Accessibility**: WCAG 2.1 AA compliance mandatory
-- **TypeScript**: Strict type checking enabled
-
-### Contributing
-1. Fork the repository
-2. Create a feature branch
-3. Write tests for new functionality
-4. Ensure all tests pass
-5. Submit a pull request with detailed description
-
-## 📄 License
-
-MIT License - see LICENSE file for details.
-
----
-
-**Built with ❤️ for SuDu AI - Automating the future of production management**
+This project is ulitize the tools of AI coding, Claude Sonnet 4.0 and Sonnet 4.5.

@@ -4,7 +4,7 @@
       <div class="footer-content">
         <div class="footer-section">
           <p class="footer-text">
-            © 2026 SuDu AI - Production Order Dashboard
+            © Angel Yap - Production Order Dashboard
           </p>
           <p class="footer-subtitle">
             Automating 80% of routine operations with intelligent insights

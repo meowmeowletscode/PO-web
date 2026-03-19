@@ -22,7 +22,7 @@ I have successfully created a comprehensive Vue.js frontend for the Production O
 - ✅ **Authentication System (Optional)**
   - JWT-based login/registration functionality
   - User profile management with role-based access
-  - Demo credentials available: `username: demo, password: demo123`
+  - Demo credentials available: `username: admin, password: Admin123`
 
 ### **Technical Excellence**
 - ✅ **Modern Vue 3 Architecture**

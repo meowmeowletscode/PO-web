@@ -135,7 +135,7 @@
             </div>
             <p class="demo-note">
               <small>
-                Username: <code>demo</code> | Password: <code>demo123</code>
+                Username: <code>admin</code> | Password: <code>Admin123</code>
               </small>
             </p>
           </div>
@@ -209,8 +209,8 @@ const clearFieldError = (field: string) => {
 }
 
 const fillDemoCredentials = () => {
-  formData.username = 'demo'
-  formData.password = 'demo123'
+  formData.username = 'admin'
+  formData.password = 'Admin123'
   // Clear any existing errors
   Object.keys(formErrors).forEach(key => {
     delete formErrors[key]
